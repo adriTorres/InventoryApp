@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="catalog_pad">16dp</dimen>
+    <dimen name="catalog_marg">16dp</dimen>
+    <dimen name="editor_pad">16dp</dimen>
+    <dimen name="spinner_pad_right">16dp</dimen>
+    <dimen name="spinner_height">40dp</dimen>
+    <dimen name="button_marg_top">32dp</dimen>
+</resources>
