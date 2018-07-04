@@ -1,6 +1,7 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Books</string>
-    <string name="editor_new_book">Add a Book</string>
+    <string name="editor_new_book">Add Book</string>
+    <string name="editor_edit_book">Edit Book</string>
     <string name="action_insert_dummy_data">Insert Dummy Data</string>
     <string name="action_delete_all_books">Delete All Books</string>
     <string name="category_book">Book Info</string>
@@ -13,5 +14,30 @@
     <string name="book_price_unit">$</string>
     <string name="edit_book_name">Name</string>
     <string name="edit_book_author">Author</string>
-    <string name="button_text">Add</string>
+    <string name="button_order_text">Order</string>
+    <string name="editor_error">Error with saving book</string>
+    <string name="editor_ok">Book saved with row id:</string>
+    <string name="catalog_ok">rows inserted successfully</string>
+    <string name="catalog_error">Problem inserting data</string>
+    <string name="empty_view_title_text">It\'s a bit lonely here</string>
+    <string name="empty_view_subtitle_text">Get started by adding a book</string>
+    <string name="plus_text">+</string>
+    <string name="minus_text">-</string>
+    <string name="button_sale_text">Sale</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="price_list">Price: <xliff:g id="nPrice" example="10.99">%.2f</xliff:g> $</string>
+    <string name="quantity_list">Stock: <xliff:g id="nQuantity" example="54">%d</xliff:g></string>
+    <string name="editor_insert_book_failed">Error with saving the book</string>
+    <string name="editor_insert_book_ok">Book saved</string>
+    <string name="editor_update_book_failed">Error with updating the book</string>
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep editing</string>
+    <string name="delete_dialog_msg">Delete this book?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="editor_delete_book_failed">Error with deleting a book</string>
+    <string name="editor_delete_book_ok">Book deleted</string>
+    <string name="catalog_delete_all_msg">Delete all books?</string>
 </resources>

@@ -3,7 +3,19 @@
     <dimen name="catalog_pad">16dp</dimen>
     <dimen name="catalog_marg">16dp</dimen>
     <dimen name="editor_pad">16dp</dimen>
-    <dimen name="spinner_pad_right">16dp</dimen>
-    <dimen name="spinner_height">40dp</dimen>
+    <dimen name="spinner_height">45dp</dimen>
     <dimen name="button_marg_top">32dp</dimen>
+    <dimen name="empty_view_text_pad">8dp</dimen>
+    <dimen name="empty_view_image_width">180dp</dimen>
+    <dimen name="empty_view_image_height">149dp</dimen>
+    <dimen name="quantity_button_width">50dp</dimen>
+    <dimen name="list_element_padding">16dp</dimen>
+    <dimen name="list_element_quantity_margin">8dp</dimen>
+    <dimen name="button_sale_width">65dp</dimen>
+    <dimen name="main_layout_element_margin">16dp</dimen>
+    <dimen name="order_button_marg">32dp</dimen>
+    <dimen name="phone_padding">36dp</dimen>
+    <dimen name="total_plus_margin">8dp</dimen>
+    <dimen name="dollar_padding_right">14dp</dimen>
+    <dimen name="dollar_padding_top">10dp</dimen>
 </resources>

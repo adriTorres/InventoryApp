@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -56,8 +57,8 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_alignParentRight="true"
-                android:paddingRight="14dp"
-                android:paddingTop="10dp"
+                android:paddingRight="@dimen/dollar_padding_right"
+                android:paddingTop="@dimen/dollar_padding_top"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:id="@+id/label_price_units"
                 android:text="@string/book_price_unit" />
@@ -74,16 +75,49 @@
             style="@style/CategoryStyle"
             android:text="@string/category_quantity" />
 
-        <LinearLayout
+        <RelativeLayout
             style="@style/LayoutStyle">
 
-            <Spinner
-                android:id="@+id/spinner_quantity"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/spinner_height"
-                android:paddingRight="@dimen/spinner_pad_right"
-                android:spinnerMode="dropdown" />
-        </LinearLayout>
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/total_quantity"
+                    style="@style/CategoryStyle"
+                    android:layout_width="wrap_content"
+                    tools:text="100" />
+                <TextView
+                    android:id="@+id/total_plus"
+                    style="@style/EditorFieldStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="@dimen/total_plus_margin"
+                    tools:text="+500" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true">
+                <Button
+                    android:id="@+id/button_plus"
+                    android:layout_width="@dimen/quantity_button_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/plus_text" />
+
+                <Spinner
+                    android:id="@+id/spinner_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/spinner_height"
+                    android:spinnerMode="dropdown" />
+
+                <Button
+                    android:id="@+id/buton_minus"
+                    android:layout_width="@dimen/quantity_button_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/minus_text" />
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -104,21 +138,28 @@
                 android:inputType="text"
                 style="@style/EditorFieldStyle" />
 
-            <EditText
-                android:id="@+id/edit_supp_phone"
-                android:hint="@string/edit_supp_phone"
-                android:inputType="phone"
-                style="@style/EditorFieldStyle" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/edit_supp_phone"
+                    android:hint="@string/edit_supp_phone"
+                    android:inputType="phone"
+                    style="@style/EditorFieldStyle"
+                    android:layout_width="wrap_content"
+                    android:paddingRight="@dimen/phone_padding" />
+
+                <Button
+                    android:id="@+id/button_order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/button_order_text" />
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/button_marg_top"
-        android:text="@string/button_text"
-        android:onClick="insertPet"
-        android:layout_gravity="center"/>
+
 
 </LinearLayout>

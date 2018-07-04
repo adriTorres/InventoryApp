@@ -1,27 +1,40 @@
 package com.example.android.inventoryapp;
 
+import android.app.AlertDialog;
+import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
-import com.example.android.inventoryapp.data.BookDbHelper;
 import com.example.android.inventoryapp.data.BookContract.BookEntry;
 
 /**
  * Displays list of books that were entered and stored in the app.
  */
-public class CatalogActivity extends AppCompatActivity {
+public class CatalogActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor>{
 
-    /** Database helper that will provide us access to the database */
-    private BookDbHelper mDbHelper;
+    public static final String LOG_TAG = CatalogActivity.class.getSimpleName();
+
+    /** Identifier for the book data loader */
+    private static final int BOOK_LOADER = 0;
+
+    /** Adapter for the ListView */
+    BookCursorAdapter mCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,108 +51,44 @@ public class CatalogActivity extends AppCompatActivity {
             }
         });
 
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-        mDbHelper = new BookDbHelper(this);
-    }
+        // Find the ListView which will be populated with the books data
+        ListView bookListView = (ListView) findViewById(R.id.list);
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        displayDatabaseInfo();
-    }
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        View emptyView = findViewById(R.id.empty_view);
+        bookListView.setEmptyView(emptyView);
 
-    /**
-     * Temporary helper method to display information in the onscreen TextView about the state of
-     * the books database.
-     */
-    private void displayDatabaseInfo() {
-        // Create and/or open a database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        // Setup an Adapter to create a list item for each row of book data in the Cursor.
+        mCursorAdapter = new BookCursorAdapter(this, null);
+        bookListView.setAdapter(mCursorAdapter);
 
-        // Define a projection that specifies which columns from the database
-        // you will actually use after this query.
-        String[] projection = {
-                BookEntry._ID,
-                BookEntry.COLUMN_BOOK_NAME,
-                BookEntry.COLUMN_BOOK_AUTHOR,
-                BookEntry.COLUMN_BOOK_PRICE,
-                BookEntry.COLUMN_BOOK_QUANTITY,
-                BookEntry.COLUMN_SUPPLIER_NAME,
-                BookEntry.COLUMN_SUPPLIER_PHONE,};
+        // Setup the item click listener
+        bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                // Create new intent to go to {@link EditorActivity}
+                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
 
-        // Perform a query on the pets table
-        Cursor cursor = db.query(
-                BookEntry.TABLE_NAME,   // The table to query
-                projection,            // The columns to return
-                null,                  // The columns for the WHERE clause
-                null,                  // The values for the WHERE clause
-                null,                  // Don't group the rows
-                null,                  // Don't filter by row groups
-                null);                   // The sort order
+                // Form the content URI that represents the specific book that was clicked on,
+                // by appending the "id".
+                Uri currentBookUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
 
-        TextView displayView = (TextView) findViewById(R.id.textView);
+                // Set the URI on the data field of the intent
+                intent.setData(currentBookUri);
 
-        try {
-            // Create a header in the Text View that looks like this:
-            //
-            // The books table contains <number of rows in Cursor> books.
-            // _id - name - author - price - quantity - supplier_name - supplier_phone
-            //
-            // In the while loop below, iterate through the rows of the cursor and display
-            // the information from each column in this order.
-            displayView.setText("The book table contains " + cursor.getCount() + " books.\n\n");
-            displayView.append(BookEntry._ID + " - " +
-                    BookEntry.COLUMN_BOOK_NAME + " - " +
-                    BookEntry.COLUMN_BOOK_AUTHOR + " - " +
-                    BookEntry.COLUMN_BOOK_PRICE + " - " +
-                    BookEntry.COLUMN_BOOK_QUANTITY + " - " +
-                    BookEntry.COLUMN_SUPPLIER_NAME + " - " +
-                    BookEntry.COLUMN_SUPPLIER_PHONE + "\n");
-
-            // Figure out the index of each column
-            int idColumnIndex = cursor.getColumnIndex(BookEntry._ID);
-            int nameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_NAME);
-            int authorColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_AUTHOR);
-            int priceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_PRICE);
-            int quantityColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_QUANTITY);
-            int suppNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_SUPPLIER_NAME);
-            int suppPhoneColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_SUPPLIER_PHONE);
-
-
-            // Iterate through all the returned rows in the cursor
-            while (cursor.moveToNext()) {
-                // Use that index to extract the String or Int value of the word
-                // at the current row the cursor is on.
-                int currentID = cursor.getInt(idColumnIndex);
-                String currentName = cursor.getString(nameColumnIndex);
-                String currentAuthor = cursor.getString(authorColumnIndex);
-                double currentPrice = cursor.getDouble(priceColumnIndex);
-                int currentQuantity = cursor.getInt(quantityColumnIndex);
-                String currentSuppName = cursor.getString(suppNameColumnIndex);
-                String currentSuppPhone = cursor.getString(suppPhoneColumnIndex);
-                // Display the values from each column of the current row in the cursor in the TextView
-                displayView.append(("\n" + currentID + " - " +
-                        currentName + " - " +
-                        currentAuthor + " - " +
-                        currentPrice + " - " +
-                        currentQuantity + " - " +
-                        currentSuppName + " - " +
-                        currentSuppPhone) + "\n");
+                // Launch the {@link EditorActivity} to display the data for the current pet.
+                startActivity(intent);
             }
-        } finally {
-            // Close the cursor
-            cursor.close();
-        }
+        });
+
+        // Kick off the loader
+        getLoaderManager().initLoader(BOOK_LOADER, null, this);
     }
 
     /**
-     * Helper method to insert hardcoded pet data into the database. For debugging purposes only.
+     * Helper method to insert hardcoded book data into the database. For debugging purposes only.
      */
     private void insertBook() {
-        // Gets the database in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         // Create a ContentValues object where column names are the keys inserting a dummy book
         ContentValues values = new ContentValues();
         values.put(BookEntry.COLUMN_BOOK_NAME, "Brave New Dummy");
@@ -149,14 +98,13 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(BookEntry.COLUMN_SUPPLIER_NAME, "Supplier Name");
         values.put(BookEntry.COLUMN_SUPPLIER_PHONE, "1234567890");
 
-        // Insert
-        db.insert(BookEntry.TABLE_NAME, null, values);
+        // Insert a new row for into the provider using the ContentResolver.
+        Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
     }
 
     private void deleteAll(){
-        // Gets the database in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        db.delete(BookEntry.TABLE_NAME, null, null);
+        int rowsDeleted = getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
+        Log.v("CatalogActivity", rowsDeleted + " rows deleted from book database");
     }
 
     @Override
@@ -174,14 +122,73 @@ public class CatalogActivity extends AppCompatActivity {
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
                 insertBook();
-                displayDatabaseInfo();
                 return true;
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
-                deleteAll();
-                displayDatabaseInfo();
+                showDeleteConfirmationDialog();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        // Define a projection that specifies the columns from the table we care about.
+        String[] projection = {
+                BookEntry._ID,
+                BookEntry.COLUMN_BOOK_NAME,
+                BookEntry.COLUMN_BOOK_AUTHOR,
+                BookEntry.COLUMN_BOOK_PRICE,
+                BookEntry.COLUMN_BOOK_QUANTITY};
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        return new CursorLoader(this,   // Parent activity context
+                BookEntry.CONTENT_URI,   // Provider content URI to query
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);                  // Default sort order
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Update {@link PetCursorAdapter} with this new cursor containing updated pet data
+        mCursorAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // Callback called when the data needs to be deleted
+        mCursorAdapter.swapCursor(null);
+    }
+
+    /**
+     * Prompt the user to confirm that they want to delete this book.
+     */
+    private void showDeleteConfirmationDialog() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.catalog_delete_all_msg);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so delete the pet.
+                deleteAll();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the pet.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
 }

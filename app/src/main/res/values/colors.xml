@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="background_color">#f9f9f9</color>
+    <color name="empty_view_subtitle_color">#A2AAB0</color>
+    <color name="list_element_author_color">#A2AAB0</color>
+    <color name="list_element_main_color">#2B3D4D</color>
 </resources>
