@@ -40,4 +40,5 @@
     <string name="editor_delete_book_failed">Error with deleting a book</string>
     <string name="editor_delete_book_ok">Book deleted</string>
     <string name="catalog_delete_all_msg">Delete all books?</string>
+    <string name="null_fields_warning">Saving failed. Please fill all the fields</string>
 </resources>

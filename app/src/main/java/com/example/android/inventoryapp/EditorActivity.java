@@ -214,7 +214,7 @@ public class EditorActivity  extends AppCompatActivity implements
                 TextUtils.isEmpty(priceString) || TextUtils.isEmpty(suppNameString) ||
                 TextUtils.isEmpty(suppPhoneString)) {
             // Since some of the fields were not modified, toast warning.
-            Toast.makeText(this,"Saving failed. Please fill all the fields",
+            Toast.makeText(this, getString(R.string.null_fields_warning),
                     Toast.LENGTH_LONG).show();
             return;
         }
