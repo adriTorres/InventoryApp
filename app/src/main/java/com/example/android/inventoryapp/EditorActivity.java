@@ -210,11 +210,12 @@ public class EditorActivity  extends AppCompatActivity implements
         String suppPhoneString = mSuppPhoneEditText.getText().toString().trim();
 
         //Check if some of the fields in the editor are blank
-        if (mCurrentBookUri == null ||
-                TextUtils.isEmpty(nameString) || TextUtils.isEmpty(authorString) ||
+        if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(authorString) ||
                 TextUtils.isEmpty(priceString) || TextUtils.isEmpty(suppNameString) ||
                 TextUtils.isEmpty(suppPhoneString)) {
-            // Since some of the fields were not modified, we can return early without creating a new book.
+            // Since some of the fields were not modified, toast warning.
+            Toast.makeText(this,"Saving failed. Please fill all the fields",
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
